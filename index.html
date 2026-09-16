@@ -5,6 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="description" content="이상탐지 연구와 웹 개발 경험을 바탕으로, 문제를 분석하고 작동하는 형태로 구현하는 박길수의 개인 페이지입니다.">
   <meta name="theme-color" content="#f4f1ea">
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='18' fill='%232e6653'/%3E%3Cpath d='M18 18h13c10 0 16 5 16 14s-6 14-16 14H18V18Zm12 20c6 0 9-2 9-6s-3-6-9-6h-4v12h4Z' fill='%23f4f1ea'/%3E%3C/svg%3E">
   <title>박길수 — Anomaly Detection &amp; ML Engineering</title>
 
   <style>
@@ -16,7 +17,8 @@
       --line: rgba(32, 35, 31, 0.16);
       --accent: #2e6653;
       --accent-soft: #dce8df;
-      --warm: #bd6b43;
+      --warm: #9a4f31;
+      --focus: #1b4f3f;
       --card: rgba(255, 255, 255, 0.58);
       --shadow: 0 18px 50px rgba(38, 42, 36, 0.07);
       --radius-lg: 28px;
@@ -54,10 +56,29 @@
     }
 
     a:focus-visible,
+    button:focus-visible,
     summary:focus-visible {
-      outline: 3px solid rgba(46, 102, 83, 0.35);
+      outline: 3px solid var(--focus);
       outline-offset: 4px;
       border-radius: 8px;
+    }
+
+    .skip-link {
+      position: fixed;
+      z-index: 100;
+      top: 12px;
+      left: 16px;
+      padding: 10px 15px;
+      border-radius: 10px;
+      color: #fff;
+      background: var(--ink);
+      font-size: 13px;
+      font-weight: 800;
+      transform: translateY(-150%);
+    }
+
+    .skip-link:focus {
+      transform: translateY(0);
     }
 
     .site-header {
@@ -112,6 +133,42 @@
     .nav-links a:hover {
       color: var(--ink);
       background: rgba(255, 255, 255, 0.55);
+    }
+
+    .motion-toggle {
+      min-height: 36px;
+      display: inline-flex;
+      align-items: center;
+      gap: 7px;
+      padding: 7px 11px;
+      border: 1px solid var(--line);
+      border-radius: 999px;
+      color: var(--muted);
+      background: rgba(255, 255, 255, 0.48);
+      font: inherit;
+      font-size: 11px;
+      font-weight: 750;
+      cursor: pointer;
+    }
+
+    .motion-toggle:hover,
+    .motion-toggle[aria-pressed="true"] {
+      color: var(--ink);
+      background: rgba(255, 255, 255, 0.76);
+    }
+
+    .motion-indicator {
+      width: 8px;
+      height: 8px;
+      border: 1px solid currentColor;
+      border-radius: 50%;
+      background: transparent;
+    }
+
+    .motion-toggle[aria-pressed="true"] .motion-indicator {
+      border-color: var(--accent);
+      background: var(--accent);
+      box-shadow: 0 0 0 3px var(--accent-soft);
     }
 
     .first-view {
@@ -440,6 +497,13 @@
       font-size: 16px;
     }
 
+    .section-heading .interaction-help {
+      margin-top: 11px;
+      color: var(--accent);
+      font-size: 12px;
+      font-weight: 750;
+    }
+
     .work-grid {
       display: grid;
       grid-template-columns: repeat(3, minmax(0, 1fr));
@@ -537,17 +601,22 @@
       gap: 12px;
     }
 
-    .scope-list {
+    .scope-card {
       margin: 0;
-      padding: 16px 18px 16px 34px;
+      padding: 16px 18px;
       border-radius: 14px;
       background: rgba(255, 255, 255, 0.42);
-      font-size: 12px;
     }
 
-    .scope-list strong {
-      display: block;
-      margin: 0 0 8px -16px;
+    .scope-card h3 {
+      margin-bottom: 8px;
+      font-size: 12px;
+      letter-spacing: -0.01em;
+    }
+
+    .scope-list {
+      margin: 0;
+      padding-left: 18px;
       font-size: 12px;
     }
 
@@ -633,7 +702,11 @@
       }
 
       .nav-links a {
-        padding-right: 0;
+        display: none;
+      }
+
+      .motion-toggle {
+        padding-inline: 10px;
       }
 
       h1 {
@@ -727,24 +800,49 @@
       }
     }
 
+    html[data-reduce-motion="true"] {
+      scroll-behavior: auto;
+    }
+
+    html[data-reduce-motion="true"] *,
+    html[data-reduce-motion="true"] *::before,
+    html[data-reduce-motion="true"] *::after {
+      animation-duration: 0.01ms !important;
+      animation-iteration-count: 1 !important;
+      scroll-behavior: auto !important;
+      transition-duration: 0.01ms !important;
+    }
+
+    html[data-reduce-motion="true"] .button:hover {
+      transform: none;
+    }
+
     @media (prefers-reduced-motion: reduce) {
-      html {
+      html:not([data-reduce-motion="false"]) {
         scroll-behavior: auto;
       }
 
-      *,
-      *::before,
-      *::after {
+      html:not([data-reduce-motion="false"]) *,
+      html:not([data-reduce-motion="false"]) *::before,
+      html:not([data-reduce-motion="false"]) *::after {
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        scroll-behavior: auto !important;
         transition-duration: 0.01ms !important;
+      }
+
+      html:not([data-reduce-motion="false"]) .button:hover {
+        transform: none;
       }
     }
   </style>
 </head>
 
 <body>
+  <a class="skip-link" href="#main-content">본문으로 바로 이동</a>
   <header class="site-header">
     <nav class="nav" aria-label="주요 탐색">
-      <a class="brand" href="#top" aria-label="박길수 소개로 이동">
+      <a class="brand" href="#main-content" aria-label="박길수 소개로 이동">
         <span class="brand-mark" aria-hidden="true"></span>
         <span>GILSU PARK</span>
       </a>
@@ -752,11 +850,15 @@
         <a href="#current">현재 활동</a>
         <a href="#evidence">근거</a>
         <a href="#how-i-work">작업 방식</a>
+        <button class="motion-toggle" id="motion-toggle" type="button" aria-pressed="false">
+          <span class="motion-indicator" aria-hidden="true"></span>
+          <span id="motion-label">움직임 줄이기: 꺼짐</span>
+        </button>
       </div>
     </nav>
   </header>
 
-  <main id="top">
+  <main id="main-content" tabindex="-1">
     <section class="first-view" aria-labelledby="intro-title">
       <div class="hero-grid">
         <div class="hero-copy">
@@ -831,6 +933,7 @@
         <p class="section-label">How I work</p>
         <h2 id="work-title">강점은 표현보다<br>행동과 결과로 설명합니다.</h2>
         <p>각 항목을 열면 실제 상황에서 무엇을 보고, 어떻게 행동했고, 어떤 결과를 만들었는지 확인할 수 있습니다.</p>
+        <p class="interaction-help" id="interaction-help">마우스로 누르거나 Tab으로 이동한 뒤 Enter 또는 Space를 누르세요.</p>
       </div>
 
       <div class="work-grid">
@@ -839,7 +942,7 @@
           <h3>원인을 좁혀갑니다</h3>
           <p>운영 웹 시스템에서 요청 흐름, 로그, SQL과 데이터 처리를 따라가며 장애 지점과 수정 영향 범위를 확인했습니다.</p>
           <details>
-            <summary>상황 · 행동 · 결과 보기</summary>
+            <summary aria-label="원인을 좁혀간 경험의 상황·행동·결과 보기">상황 · 행동 · 결과 보기</summary>
             <div class="sar">
               <p><b>SITUATION</b>화면만으로 장애 원인이 드러나지 않는 운영 문제가 있었습니다.</p>
               <p><b>ACTION</b>요청 흐름, 애플리케이션 로그, SQL, 데이터 처리 순서로 추적했습니다.</p>
@@ -853,7 +956,7 @@
           <h3>실험으로 확인합니다</h3>
           <p>로그 이상탐지의 시간 가중치, Burst, Top-k를 개별 구현하고 세 데이터셋에서 같은 지표로 비교했습니다.</p>
           <details>
-            <summary>상황 · 행동 · 결과 보기</summary>
+            <summary aria-label="비교 실험 경험의 상황·행동·결과 보기">상황 · 행동 · 결과 보기</summary>
             <div class="sar">
               <p><b>SITUATION</b>기존 그래프가 로그 이벤트의 시간 관계를 충분히 반영하지 못하는 문제를 다뤘습니다.</p>
               <p><b>ACTION</b>개선 방법을 각각 구현하고 HDFS, BGL, Thunderbird에서 비교했습니다.</p>
@@ -867,7 +970,7 @@
           <h3>전체 흐름으로 만듭니다</h3>
           <p>네트워크 이상탐지를 입력과 특징 생성에서 끝내지 않고 추론 API, 저장, 화면 확인까지 연결하고 있습니다.</p>
           <details>
-            <summary>상황 · 행동 · 결과 보기</summary>
+            <summary aria-label="전체 시스템 설계 경험의 상황·행동·결과 보기">상황 · 행동 · 결과 보기</summary>
             <div class="sar">
               <p><b>SITUATION</b>모델 성능만이 아니라 실제 사용 흐름을 보여줄 결과물이 필요했습니다.</p>
               <p><b>ACTION</b>트래픽 처리, 탐지 모델, API, DB, 대시보드의 연결 구조를 설계했습니다.</p>
@@ -885,18 +988,22 @@
         <p>경험을 설명하는 데 필요한 근거만 공개하고, 개인·회사·인프라의 식별 정보는 포함하지 않습니다.</p>
       </div>
       <div class="scope-grid">
-        <ul class="scope-list">
-          <strong>공개</strong>
-          <li>연구 주제와 비교 실험 결과</li>
-          <li>직접 수행한 역할과 프로젝트 구조</li>
-          <li>사용 기술과 공개 가능한 코드</li>
-        </ul>
-        <ul class="scope-list">
-          <strong>비공개</strong>
-          <li>연락처·주소 등 불필요한 개인정보</li>
-          <li>회사 내부 코드·로그·고객 정보</li>
-          <li>비밀값·서버 주소·내부 네트워크 정보</li>
-        </ul>
+        <div class="scope-card">
+          <h3>공개</h3>
+          <ul class="scope-list">
+            <li>연구 주제와 비교 실험 결과</li>
+            <li>직접 수행한 역할과 프로젝트 구조</li>
+            <li>사용 기술과 공개 가능한 코드</li>
+          </ul>
+        </div>
+        <div class="scope-card">
+          <h3>비공개</h3>
+          <ul class="scope-list">
+            <li>연락처·주소 등 불필요한 개인정보</li>
+            <li>회사 내부 코드·로그·고객 정보</li>
+            <li>비밀값·서버 주소·내부 네트워크 정보</li>
+          </ul>
+        </div>
       </div>
     </section>
   </main>
@@ -904,5 +1011,38 @@
   <footer>
     <p>© 2026 Gilsu Park. 이 페이지는 공개 가능한 경험과 근거만 담았습니다.</p>
   </footer>
+
+  <script>
+    (() => {
+      const root = document.documentElement;
+      const motionButton = document.getElementById("motion-toggle");
+      const motionLabel = document.getElementById("motion-label");
+      const systemPreference = window.matchMedia("(prefers-reduced-motion: reduce)");
+      let userSelected = false;
+
+      const applyMotionPreference = (reduceMotion) => {
+        root.dataset.reduceMotion = String(reduceMotion);
+        motionButton.setAttribute("aria-pressed", String(reduceMotion));
+        motionLabel.textContent = `움직임 줄이기: ${reduceMotion ? "켜짐" : "꺼짐"}`;
+      };
+
+      applyMotionPreference(systemPreference.matches);
+
+      motionButton.addEventListener("click", () => {
+        userSelected = true;
+        applyMotionPreference(motionButton.getAttribute("aria-pressed") !== "true");
+      });
+
+      const followSystemPreference = (event) => {
+        if (!userSelected) applyMotionPreference(event.matches);
+      };
+
+      if (typeof systemPreference.addEventListener === "function") {
+        systemPreference.addEventListener("change", followSystemPreference);
+      } else if (typeof systemPreference.addListener === "function") {
+        systemPreference.addListener(followSystemPreference);
+      }
+    })();
+  </script>
 </body>
 </html>
